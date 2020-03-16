@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/menu_show"
+        android:title="显示"
+        android:orderInCategory="100"/>
+    <item
+        android:id="@+id/menu_hard"
+        android:title="生词本"
+        android:orderInCategory="200"/>
+    <item
+        android:id="@+id/menu_download"
+        android:title="下载"
+        android:orderInCategory="200"/>
+</menu>
