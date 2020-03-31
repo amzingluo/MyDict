@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="luo.mydict">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission  android:name = "android.permission.GET_TASKS"/>
-
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -15,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".HardActivity"></activity>
+        <activity android:name=".InfoActivity"></activity>
+        <activity android:name=".HardActivity" />
         <activity
             android:name=".WebActivity"
             android:screenOrientation="portrait"
@@ -30,5 +27,9 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

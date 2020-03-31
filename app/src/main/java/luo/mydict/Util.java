@@ -16,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import Translation.TransApi;
@@ -33,9 +32,9 @@ public class Util {
     private static Gson gson = new Gson();
 
 
-    public static List<String> getSDFile(Context context) {
+    public static ArrayList<String> getSDFile(Context context) {
 
-        List newList = new ArrayList<String>();
+        ArrayList newList = new ArrayList<String>();
         try {
             File file = new File(filePath);
             int count = 0;//初始化 key值
@@ -220,6 +219,52 @@ public class Util {
         Intent intent=new Intent(LaunchActivity.context,WebActivity.class);
         intent.putExtra("word",word);
         LaunchActivity.context.startActivity(intent);
+    }
+
+    public static void setBanList(ArrayList<String> datalist) {
+        if (null == datalist)
+            return;
+        String strJson = gson.toJson(datalist);
+        editor.putString("ban", strJson);
+        editor.commit();
+    }
+
+    public static ArrayList<String> getBanList() {
+        String strJson = preferences.getString("ban", null);
+        if (null == strJson) {
+            return new ArrayList<String>();
+        }
+        ArrayList<String> ban = gson.fromJson(strJson, new TypeToken<ArrayList<String>>() {
+        }.getType());
+        return ban;
+    }
+
+    public static void addBan(String word) {
+        if (word.equals(""))
+            return;
+        ArrayList<String> banList =getBanList();
+        for(int i=0;i<banList.size();i++){
+            if(banList.get(i).equals(word)){//已经存在了
+                return;
+            }
+        }
+        banList.add(word);
+        setBanList(banList);
+    }
+
+
+    public static ArrayList<String> filterBan(ArrayList<String> oList){
+        ArrayList<String> ban =getBanList();
+        for(int i=0;i<oList.size();i++){
+            for(int t=0;t<ban.size();t++){
+                if(ban.get(t).equals(oList.get(i))){
+                    oList.remove(i);
+                    i--;
+                    break;
+                }
+            }
+        }
+        return oList;
     }
 
 }

@@ -1,17 +1,22 @@
-package luo.mydict;
+package luo.mydict.View;
 
-import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import luo.mydict.App;
+import luo.mydict.HardActivity;
+import luo.mydict.LaunchActivity;
+import luo.mydict.R;
+import luo.mydict.Util;
 
 public class WordAdapter extends  RecyclerView.Adapter{
 
@@ -26,7 +31,7 @@ public class WordAdapter extends  RecyclerView.Adapter{
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LaunchActivity.activity.getLayoutInflater().inflate(R.layout.word_item, null, false);
+        View v = LaunchActivity.activity.getLayoutInflater().inflate(R.layout.word_item, parent, false);
         RecyclerView.ViewHolder holder = new MyViewHolder(v);
         return holder;
     }
@@ -139,14 +144,17 @@ public class WordAdapter extends  RecyclerView.Adapter{
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView word, tword;
-        public RelativeLayout item;
+        public TextView word, tword,delect;
+        public ConstraintLayout item;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             word = itemView.findViewById(R.id.word);
             tword = itemView.findViewById(R.id.translation_word);
             item = itemView.findViewById(R.id.item);
+            delect = itemView.findViewById(R.id.delect);
         }
     }
+
+
 }

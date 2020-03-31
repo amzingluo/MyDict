@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,15 +17,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
+import luo.mydict.View.RecycleItemTouchHelper;
+import luo.mydict.View.WordAdapter;
 
 public class LaunchActivity extends AppCompatActivity {
 
-    public static List<String> wordList;
+    public static ArrayList<String> wordList;
 
     public static Context context;
 
@@ -42,6 +51,7 @@ public class LaunchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
+        EventBus.getDefault().register(this);
         context=this;
         dictMap=Util.getDictMap();
         activity =LaunchActivity.this;
@@ -73,6 +83,7 @@ public class LaunchActivity extends AppCompatActivity {
 
     private void showList(){
         wordList=Util.getSDFile(this);
+        wordList=Util.filterBan(wordList);
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -82,6 +93,13 @@ public class LaunchActivity extends AppCompatActivity {
 
         recyclerView.addItemDecoration(new DividerItemDecoration(
                 this, DividerItemDecoration.VERTICAL));
+
+
+
+        ItemTouchHelper.Callback callback=new RecycleItemTouchHelper();
+        ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
 
         Util.tranList();
     }
@@ -122,6 +140,7 @@ public class LaunchActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         menu.findItem(R.id.menu_download).setVisible(false);
+        menu.findItem(R.id.menu_info).setVisible(false);//暂时先禁用信息页面，显得太繁琐了
         return true;
     }
 
@@ -136,6 +155,9 @@ public class LaunchActivity extends AppCompatActivity {
             case  R.id.menu_hard :
                 startActivity(new Intent(this,HardActivity.class));
                 break;
+            case R.id.menu_info:
+                startActivity(new Intent(this,InfoActivity.class));
+                break;
         }
         return true;
     }
@@ -144,5 +166,17 @@ public class LaunchActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Util.stopThread();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void update(EventBean eventBean) {
+        if (eventBean.getType() == EventBean.TYPE_UPDATE_WORD_LAUNCH) {
+
+            wordList=Util.filterBan(wordList);
+            recyclerView.getAdapter().notifyDataSetChanged();
+
+            Log.d("luojianjin", "eventbus");
+        }
     }
 }

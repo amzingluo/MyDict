@@ -12,4 +12,8 @@
         android:id="@+id/menu_download"
         android:title="下载"
         android:orderInCategory="200"/>
+    <item
+        android:id="@+id/menu_info"
+        android:title="信息"
+        android:orderInCategory="200"/>
 </menu>

@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+import java.util.ArrayList;
+
+import luo.mydict.View.WordAdapter;
 
 public class HardActivity extends AppCompatActivity {
 
-    public static List<String> wordList;
+    public static ArrayList<String> wordList;
     public static Menu menu;
     public static boolean isShow;
     public static RecyclerView recyclerView;
@@ -43,6 +45,7 @@ public class HardActivity extends AppCompatActivity {
 
     private void showList(){
         wordList=Util.getHardList();
+        wordList=Util.filterBan(wordList);
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -52,6 +55,9 @@ public class HardActivity extends AppCompatActivity {
 
         recyclerView.addItemDecoration(new DividerItemDecoration(
                 this, DividerItemDecoration.VERTICAL));
+
+
+
 
     }
 
