@@ -2,9 +2,8 @@
 
 buildscript {
     repositories {
-        maven {
-            url "http://10.252.250.53:8081/lm/content/groups/public/"
-        }
+        google()
+        jcenter()
         
     }
     dependencies {
@@ -17,9 +16,8 @@ buildscript {
 
 allprojects {
     repositories {
-        maven {
-            url "http://10.252.250.53:8081/lm/content/groups/public/"
-        }
+        google()
+        jcenter()
     }
 }
 
