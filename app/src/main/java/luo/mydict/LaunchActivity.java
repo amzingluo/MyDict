@@ -68,15 +68,8 @@ public class LaunchActivity extends AppCompatActivity {
                     404);
         }else{
             showList();
-        }
 
-        if (recyclerView.getAdapter().getItemCount() != 0) {
-            int position = preferences.getInt("LastPosition", 0);
-            if (position > recyclerView.getAdapter().getItemCount()) {
-                position = recyclerView.getAdapter().getItemCount();
-            }
-            position = position == -1 ? 0 : position;
-            recyclerView.scrollToPosition(position);
+
         }
 
         /*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -115,6 +108,14 @@ public class LaunchActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
+        if (recyclerView.getAdapter().getItemCount() != 0) {
+            int position = preferences.getInt("LastPosition", 0);
+            if (position > recyclerView.getAdapter().getItemCount()) {
+                position = recyclerView.getAdapter().getItemCount();
+            }
+            position = position == -1 ? 0 : position;
+            recyclerView.scrollToPosition(position);
+        }
 
         Util.tranList();
     }
@@ -129,7 +130,7 @@ public class LaunchActivity extends AppCompatActivity {
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 showList();
             } else {
-                Toast.makeText(this,"请获取权限",Toast.LENGTH_LONG).show();
+                Toast.makeText(this,"请获取权限",Toast.LENGTH_SHORT).show();
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         404);
@@ -184,7 +185,7 @@ public class LaunchActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
 
 
-        if (recyclerView.getAdapter().getItemCount() != 0) {
+        if (recyclerView != null && recyclerView.getAdapter().getItemCount() != 0) {
             LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             int position = layoutManager.findFirstCompletelyVisibleItemPosition();
             position = position == -1 ? 0 : position;

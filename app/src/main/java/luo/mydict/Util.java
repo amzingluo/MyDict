@@ -96,7 +96,7 @@ public class Util {
     }
 
     public static void stopThread(){
-        if(thread.isAlive()){
+        if (thread != null && thread.isAlive()) {
             thread.interrupt();
         }
     }
