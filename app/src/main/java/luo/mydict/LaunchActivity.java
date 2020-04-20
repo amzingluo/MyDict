@@ -179,12 +179,8 @@ public class LaunchActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Util.stopThread();
-        EventBus.getDefault().unregister(this);
-
-
+    protected void onPause() {
+        super.onPause();
         if (recyclerView != null && recyclerView.getAdapter().getItemCount() != 0) {
             LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             int position = layoutManager.findFirstCompletelyVisibleItemPosition();
@@ -192,8 +188,17 @@ public class LaunchActivity extends AppCompatActivity {
             editor.putInt("LastPosition", position);
             editor.commit();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Util.stopThread();
+        EventBus.getDefault().unregister(this);
 
     }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(EventBean eventBean) {
