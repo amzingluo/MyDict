@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +47,9 @@ public class LaunchActivity extends AppCompatActivity {
     public static boolean isShow;
     private RecyclerView recyclerView;
 
+    private SharedPreferences preferences = App.Application.getSharedPreferences("dict", Context.MODE_PRIVATE);
+    private SharedPreferences.Editor editor = preferences.edit();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,14 @@ public class LaunchActivity extends AppCompatActivity {
             showList();
         }
 
+        if (recyclerView.getAdapter().getItemCount() != 0) {
+            int position = preferences.getInt("LastPosition", 0);
+            if (position > recyclerView.getAdapter().getItemCount()) {
+                position = recyclerView.getAdapter().getItemCount();
+            }
+            position = position == -1 ? 0 : position;
+            recyclerView.scrollToPosition(position);
+        }
 
         /*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -79,6 +91,9 @@ public class LaunchActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         App.isHardPage=false;
+
+
+
     }
 
     private void showList(){
@@ -167,12 +182,24 @@ public class LaunchActivity extends AppCompatActivity {
         super.onDestroy();
         Util.stopThread();
         EventBus.getDefault().unregister(this);
+
+
+        if (recyclerView.getAdapter().getItemCount() != 0) {
+            LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            int position = layoutManager.findFirstCompletelyVisibleItemPosition();
+            position = position == -1 ? 0 : position;
+            editor.putInt("LastPosition", position);
+            editor.commit();
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void update(EventBean eventBean) {
         if (eventBean.getType() == EventBean.TYPE_UPDATE_WORD_LAUNCH) {
 
+            wordList.clear();
+            wordList.addAll(Util.getSDFile(this));
             wordList=Util.filterBan(wordList);
             recyclerView.getAdapter().notifyDataSetChanged();
 

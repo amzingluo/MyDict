@@ -16,7 +16,11 @@ public class App extends Application {
     ClipboardManager.OnPrimaryClipChangedListener mOnPrimaryClipChangedListener;
     ActivityManager am ;
 
-    public static String word;
+    //有道翻译网页现在显示的词
+    public static String webShowWord;
+
+    //点击列表的单词
+    public static String clickWord;
 
     @Override
     public void onCreate() {
@@ -39,7 +43,7 @@ public class App extends Application {
                             // 获取复制、剪切的文本内容
                             CharSequence content =
                                     mClipboardManager.getPrimaryClip().getItemAt(0).getText();
-                            if(!content.equals(App.word)){
+                            if(!content.equals(App.webShowWord)){
                                 Util.openWeb(content.toString());
                                 Log.d("luojianjin","复制且打开了："+content);
                             }

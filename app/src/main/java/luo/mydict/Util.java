@@ -10,10 +10,17 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -214,8 +221,17 @@ public class Util {
         setHardList(list);
     }
 
+    public static void replaceHard(String oldword,String newword){
+        ArrayList<String> list=getHardList();
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).equals(oldword)){
+                list.set(i,newword);
+            }
+        }
+        setHardList(list);
+    }
+
     public static void openWeb(String word){
-        App.word=word;
         Intent intent=new Intent(LaunchActivity.context,WebActivity.class);
         intent.putExtra("word",word);
         LaunchActivity.context.startActivity(intent);
@@ -265,6 +281,52 @@ public class Util {
             }
         }
         return oList;
+    }
+
+    public static void changeWord(String oldWord,String newWord){
+        if (newWord.equals("") || oldWord.equals("")) {
+            return;
+        }
+
+        try {
+            String all=readToString(filePath);
+            all=all.replace(oldWord,newWord);
+
+            FileOutputStream fos = new FileOutputStream(filePath);
+            PrintWriter pw = new PrintWriter(fos);
+            pw.write(all);
+            pw.flush();
+            pw.close();
+
+            //hardpage
+            replaceHard(oldWord,newWord);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        EventBus.getDefault().post(new EventBean(EventBean.TYPE_UPDATE_WORD_LAUNCH));
+    }
+    public static String readToString(String fileName) {
+        String encoding = "UTF-8";
+        File file = new File(fileName);
+        Long filelength = file.length();
+        byte[] filecontent = new byte[filelength.intValue()];
+        try {
+            FileInputStream in = new FileInputStream(file);
+            in.read(filecontent);
+            in.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            return new String(filecontent, encoding);
+        } catch (UnsupportedEncodingException e) {
+            System.err.println("The OS does not support " + encoding);
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

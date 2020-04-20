@@ -2,6 +2,7 @@ package luo.mydict;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,6 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -28,6 +33,7 @@ public class HardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
+        EventBus.getDefault().register(this);
         activity=this;
         isShow=false;
 
@@ -41,6 +47,12 @@ public class HardActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         App.isHardPage=true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private void showList(){
@@ -81,6 +93,7 @@ public class HardActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main, menu);
         menu.findItem(R.id.menu_download).setVisible(false);
         menu.findItem(R.id.menu_hard).setVisible(false);
+        menu.findItem(R.id.menu_info).setVisible(false);
         return true;
     }
 
@@ -94,6 +107,19 @@ public class HardActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void update(EventBean eventBean) {
+        if (eventBean.getType() == EventBean.TYPE_UPDATE_WORD_LAUNCH) {
+
+            wordList.clear();
+            wordList.addAll(Util.getHardList());
+            wordList=Util.filterBan(wordList);
+            recyclerView.getAdapter().notifyDataSetChanged();
+
+            Log.d("luojianjin", "eventbus");
+        }
     }
 
 }

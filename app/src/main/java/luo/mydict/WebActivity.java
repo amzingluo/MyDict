@@ -1,10 +1,18 @@
 package luo.mydict;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -55,7 +63,52 @@ public class WebActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        App.word=this.word;
+        App.webShowWord=this.word;
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.wordweb, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        switch(item.getItemId()) //得到被点击的item的itemId
+        {
+            case  R.id.menu_changeword :
+                showDialog();
+                break;
+        }
+        return true;
+    }
+
+
+
+    private void showDialog(){
+        View view = getLayoutInflater().inflate(R.layout.dialog_fixword, null);
+        final EditText editText = (EditText) view.findViewById(R.id.dialog_fixword_editText);
+        final TextView textView = (TextView) view.findViewById(R.id.dialog_fixword_textView);
+        textView.setText(App.clickWord);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(view)
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String fixText=editText.getText().toString();
+                        Util.changeWord(App.clickWord,fixText);
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
+    }
+
 
 }

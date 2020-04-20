@@ -98,6 +98,7 @@ public class WordAdapter extends  RecyclerView.Adapter{
         }else{//hard
             text = HardActivity.wordList.get(mposition);
         }
+        App.clickWord=text;
         Util.openWeb(text);
     }
     private void longClick(int mposition){

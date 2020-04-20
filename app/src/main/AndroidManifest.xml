@@ -15,8 +15,8 @@
         <activity android:name=".HardActivity" />
         <activity
             android:name=".WebActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme2" />
+            android:screenOrientation="portrait" />
+            <!--android:theme="@style/AppTheme2"-->
         <activity
             android:name=".LaunchActivity"
             android:screenOrientation="portrait">
