@@ -232,6 +232,8 @@ public class Util {
     }
 
     public static void openWeb(String word){
+        //prevent double open
+        App.webShowWord=word;
         Intent intent=new Intent(LaunchActivity.context,WebActivity.class);
         intent.putExtra("word",word);
         LaunchActivity.context.startActivity(intent);
