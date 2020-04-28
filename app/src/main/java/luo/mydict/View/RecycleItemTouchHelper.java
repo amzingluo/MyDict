@@ -68,7 +68,7 @@ public class RecycleItemTouchHelper extends ItemTouchHelper.Callback {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
         float howFar = dX / getScreenWidth();
-        if (howFar > 0.8) {
+        if (howFar > 0.8 && howFar < 1) {
             ((WordAdapter.MyViewHolder) viewHolder).delect.setVisibility(View.VISIBLE);
             ((WordAdapter.MyViewHolder) viewHolder).word.setVisibility(View.INVISIBLE);
             ((WordAdapter.MyViewHolder) viewHolder).delect.getBackground().setAlpha((int) (255 * howFar));
