@@ -105,6 +105,10 @@ public class HardActivity extends AppCompatActivity {
             case  R.id.menu_show :
                 triggerShow();
                 break;
+            case R.id.menu_clearhard:
+                Util.clearHard();
+                EventBus.getDefault().post(new EventBean(EventBean.TYPE_UPDATE_WORD_LAUNCH));
+                break;
         }
         return true;
     }

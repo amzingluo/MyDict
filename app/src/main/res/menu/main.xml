@@ -16,4 +16,8 @@
         android:id="@+id/menu_info"
         android:title="信息"
         android:orderInCategory="200"/>
+    <item
+        android:id="@+id/menu_clearhard"
+        android:title="清空"
+        android:orderInCategory="200"/>
 </menu>

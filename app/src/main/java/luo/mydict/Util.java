@@ -191,6 +191,10 @@ public class Util {
         editor.commit();
     }
 
+    public static void clearHard() {
+        setHardList(new ArrayList<String>());
+    }
+
     public static ArrayList<String> getHardList() {
         String strJson = preferences.getString("hard", null);
         if (null == strJson) {

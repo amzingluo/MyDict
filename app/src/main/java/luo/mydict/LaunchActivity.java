@@ -157,6 +157,7 @@ public class LaunchActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main, menu);
         menu.findItem(R.id.menu_download).setVisible(false);
         menu.findItem(R.id.menu_info).setVisible(false);//暂时先禁用信息页面，显得太繁琐了
+        menu.findItem(R.id.menu_clearhard).setVisible(false);//暂时先禁用信息页面，显得太繁琐了
         return true;
     }
 
